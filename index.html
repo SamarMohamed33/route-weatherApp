@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <title>Weather App</title>
+  </head>
+  <body
+    class="d-flex flex-column justify-content-center website-divider-container-600043"
+  >
+    <!-- Header -->
+    <header class="curved">
+      <div class="container py-5 ">
+        <div class="row">
+          <div class="col-md-10 m-auto">
+            <input
+              type="text"
+              name="location"
+              class="form-control"
+              id="locationInput"
+            />
+          </div>
+          <div class="col-md-4 text-center my-3">
+            <h2 id="locationCountry">Cairo, Egypt</h2>
+            <p id="locationDate">Saturday, January 13th, 2024</p>
+            <p id="locationCondition">Cloudy</p>
+          </div>
+          <div class="col-md-4 text-center my-3"><h1 id="temp">17°</h1></div>
+          <div class="col-md-4 text-center my-3">
+            <div class="bg-white text-dark rounded-3 row p-4" id="weatherInfo">
+              <div class="col-3 col-md-6 d-flex flex-column">
+                <i class="fa-solid fa-wind"></i> <span></span>
+              </div>
+              <div class="col-3 col-md-6 d-flex flex-column">
+                <i class="fa-solid fa-temperature-full"></i>
+                <span></span>
+              </div>
+              <div class="col-3 col-md-6 d-flex flex-column">
+                <i class="fa-solid fa-droplet"></i> <span></span>
+              </div>
+              <div class="col-3 col-md-6 d-flex flex-column">
+                <i class="fa-solid fa-sun"></i> <span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Weather Forecast -->
+    <section>
+      <div class="container py-5 text-dark">
+        <div class="row gy-5" id="days"></div>
+      </div>
+    </section>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
