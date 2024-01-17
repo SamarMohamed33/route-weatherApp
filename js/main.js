@@ -4,26 +4,25 @@ let locationInput = document.getElementById("locationInput");
 let locationCountry = document.getElementById("locationCountry");
 let locationDate = document.getElementById("locationDate");
 let locationCondition = document.getElementById("locationCondition");
+let locationIcon = document.getElementById("currentIcon");
 let temp = document.getElementById("temp");
 let weatherInfo = document.querySelectorAll("#weatherInfo div span");
-let locationData = "london";
 
 const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
-window.addEventListener("load", loadDate);
-function loadDate() {
-  getDate(locationData);
+// load the current loaction and display the weather for current location
+window.addEventListener("load", getWeatherofCurrentLocation);
+function getWeatherofCurrentLocation() {
+  getLatAndLongOfCurrentLocation();
 }
-
-function getDate(location) {
+// get the weather by country name
+function getWeather(location) {
   const data = null;
   const xhr = new XMLHttpRequest();
   xhr.withCredentials = true;
 
   xhr.addEventListener("readystatechange", function () {
     if (this.readyState === this.DONE) {
-      console.log(JSON.parse(this.responseText).forecast.forecastday);
-      locationData = JSON.parse(this.responseText);
-      updateDate(locationData);
+      updateDate(JSON.parse(this.responseText));
     }
   });
 
@@ -39,15 +38,38 @@ function getDate(location) {
 
   xhr.send(data);
 }
+// get country name from text input and call getWeather function
+function search() {
+  getWeather(locationInput.value);
+}
 
-function forecastDays(days) {
+locationInput.addEventListener("keydown", search);
+
+function updateDate(locationData) {
+  getWeatherOfCurrentDay(locationData.location, locationData.current);
+  getWeatherOfThreeDays(locationData.forecast.forecastday);
+}
+// weather for the current day
+function getWeatherOfCurrentDay(location, current) {
+  locationCountry.innerHTML = `${location.name}, ${location.country}`;
+  locationDate.innerHTML = formatDate(location.localtime);
+  locationCondition.innerHTML = current.condition.text;
+  locationIcon.setAttribute("src", current.condition.icon);
+  temp.innerHTML = current.temp_c + "°";
+  weatherInfo[0].innerHTML = current.wind_kph + " Km/h";
+  weatherInfo[1].innerHTML = current.feelslike_c + "°";
+  weatherInfo[2].innerHTML = current.humidity;
+  weatherInfo[3].innerHTML = current.uv;
+}
+// weather for the next three days
+function getWeatherOfThreeDays(days) {
   let cartona = ``;
   for (let i = 0; i < days.length; i++) {
     let dayDate = new Date(days[i].date).getDay();
 
     cartona += `
-    <div class="col-4 text-center day">
-    <div class="m-1 p-1 d-flex flex-column justify-content-center align-items-center">
+    <div class="col-4 col-md-3 text-center day">
+    <div class="m-1 px-1 py-5 py-md-3 d-flex flex-column justify-content-center align-items-center">
             <p>${daysOfWeek[dayDate]}</p>
             <img src="${days[i].day.condition.icon}" />
             <p>${Math.floor(days[i].day.maxtemp_c)}° / ${Math.floor(
@@ -56,32 +78,40 @@ function forecastDays(days) {
             </div>
           </div>
     `;
-    console.log(days.length);
   }
   daysContainer.innerHTML = cartona;
 }
-
-function search() {
-  getDate(locationInput.value);
+// get lat and long for the current location
+function getLatAndLongOfCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(getNameOfCurrentLocation);
+  }
 }
+// get the country name of the current location and send the name to getWeather function
+function getNameOfCurrentLocation(position) {
+  const data = null;
 
-locationInput.addEventListener("keydown", search);
+  const xhr = new XMLHttpRequest();
+  xhr.withCredentials = true;
 
-function updateDate(locationData) {
-  currentDay(locationData.location, locationData.current);
-  forecastDays(locationData.forecast.forecastday);
+  xhr.addEventListener("readystatechange", function () {
+    if (this.readyState === this.DONE) {
+      getWeather(JSON.parse(this.responseText).location.name);
+    }
+  });
+
+  xhr.open(
+    "GET",
+    `https://weatherapi-com.p.rapidapi.com/current.json?q=${position.coords.latitude}%2C${position.coords.longitude}`
+  );
+  xhr.setRequestHeader(
+    "X-RapidAPI-Key",
+    "07df08c310msh0b1c3d7d9fe3bf7p108545jsn04bfba5437da"
+  );
+  xhr.setRequestHeader("X-RapidAPI-Host", "weatherapi-com.p.rapidapi.com");
+
+  xhr.send(data);
 }
-function currentDay(location, current) {
-  locationCountry.innerHTML = `${location.name}, ${location.country}`;
-  locationDate.innerHTML = formatDate(location.localtime);
-  locationCondition.innerHTML = current.condition.text;
-  temp.innerHTML = current.temp_c + "°";
-  weatherInfo[0].innerHTML = current.wind_kph + " Km/h";
-  weatherInfo[1].innerHTML = current.feelslike_c + "°";
-  weatherInfo[2].innerHTML = current.humidity;
-  weatherInfo[3].innerHTML = current.uv;
-}
-
 // format date
 function formatDate(inputDate) {
   // Parse the input date string
@@ -124,7 +154,6 @@ function formatDate(inputDate) {
 
   return formattedDate;
 }
-
 // Function to get the ordinal suffix for the day
 function getDaySuffix(day) {
   if (day >= 11 && day <= 13) {

@@ -1,31 +1,45 @@
 body {
   min-height: 100vh;
-  background-image: url(../images/bg.jpg);
+  /* background-image: url(../images/bg.jpg); */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 .day > div {
   border-radius: 50px;
   background-color: rgba(255, 255, 255, 0.13);
-  min-height: 200px;
+  box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3); /* min-height: 200px; */
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 header {
   position: relative;
+  /* min-height: 50vh; */
 }
 
 section {
-  /* background-color: white; */
-  position: relative;
+  background-color: white;
+  /* position: relative;
   bottom: 0px;
-  left: 0px;
+  left: 0px; */
+  /* height: 50% !important; */
 }
 .curved {
   position: relative;
-  background: white;
-  height: 50vh;
+  /* background: white; */
+  background-image: url(../images/bg.jpg);
+
+  height: 50%;
   border-bottom-left-radius: 50% 20%;
   border-bottom-right-radius: 50% 20%;
+}
+
+#weatherInfo {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+header p {
+  margin: 0;
 }
